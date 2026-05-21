@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Student Computer Return Agreement</title>
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink-light: #4a4a6a;
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --rule: #d8d5cc;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --accent-border: #93c5fd;
+    --checked-bg: #eff6ff;
+    --checked-border: #2563eb;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warn: #d97706;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .page-header {
+    background: var(--ink);
+    color: #fff;
+    padding: 24px 32px 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .page-header .seal {
+    width: 56px; height: 56px; flex-shrink: 0;
+    border: 2.5px solid rgba(255,255,255,0.35);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .page-header h1 {
+    font-size: clamp(18px, 4vw, 26px);
+    font-weight: normal;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+  .page-header p {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 3px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* ── SETUP BOX ── */
+  .setup-box {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--warn);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .setup-box .setup-inner label {
+    font-size: 13px; color: var(--ink-light);
+    display: block; margin-bottom: 6px; margin-top: 12px;
+  }
+  .setup-box .setup-inner label:first-child { margin-top: 0; }
+  .setup-box input[type="text"],
+  .setup-box input[type="password"] {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--rule); border-radius: 6px;
+    font-family: 'Courier New', monospace; font-size: 13px;
+    background: var(--bg);
+  }
+  .setup-box .btn-save-config {
+    margin-top: 10px;
+    padding: 9px 20px;
+    background: var(--warn); color: #fff;
+    border: none; border-radius: 6px;
+    font-size: 13px; cursor: pointer;
+  }
+  .setup-box small { display: block; margin-top: 8px; font-size: 11px; color: var(--ink-light); line-height: 1.5; }
+  .setup-box .hint-box {
+    margin-top: 14px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #78350f;
+  }
+  .setup-box .hint-box strong { display: block; margin-bottom: 4px; font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+  .setup-box .hint-box ol { margin-left: 16px; }
+
+  /* PIN unlock button in footer */
+  .it-unlock-btn {
+    display: block;
+    margin: 32px auto 0;
+    background: none;
+    border: none;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    color: var(--rule);
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .it-unlock-btn:hover { color: var(--ink-light); }
+
+  /* PIN modal */
+  .pin-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .pin-overlay.show { display: flex; }
+  .pin-modal {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 28px 32px;
+    width: 280px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  .pin-modal h3 {
+    font-size: 15px; margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--warn);
+  }
+  .pin-modal p { font-size: 12px; color: var(--ink-light); margin-bottom: 16px; }
+  .pin-modal input {
+    width: 100%; padding: 12px;
+    border: 1px solid var(--rule); border-radius: 6px;
+    font-size: 20px; text-align: center;
+    letter-spacing: 6px; font-family: 'Courier New', monospace;
+    background: var(--bg); margin-bottom: 12px;
+  }
+  .pin-modal input.error { border-color: var(--danger); background: #fef2f2; }
+  .pin-modal .pin-btns { display: flex; gap: 8px; }
+  .pin-modal .pin-btns button {
+    flex: 1; padding: 10px;
+    border-radius: 6px; border: none;
+    font-size: 13px; cursor: pointer;
+  }
+  .pin-modal .btn-confirm { background: var(--warn); color: #fff; }
+  .pin-modal .btn-cancel { background: var(--bg); color: var(--ink-light); border: 1px solid var(--rule); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title span.dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+  }
+
+  /* ── FORM GRID ── */
+  .form-grid { display: grid; gap: 16px; }
+  .form-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  @media (max-width: 540px) {
+    .form-grid.cols-2,
+    .form-grid.cols-3 { grid-template-columns: 1fr; }
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+  .field input[type="text"],
+  .field input[type="date"],
+  .field textarea,
+  .field select {
+    padding: 13px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Georgia', serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-appearance: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+  }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  /* ── CONDITIONS ── */
+  .condition-list { display: flex; flex-direction: column; gap: 10px; }
+  .condition-item {
+    border: 1.5px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px 16px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .condition-item.checked {
+    border-color: var(--checked-border);
+    background: var(--checked-bg);
+  }
+  .condition-item label {
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; font-size: 15px;
+  }
+  .condition-item input[type="checkbox"] {
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    accent-color: var(--accent);
+    cursor: pointer; flex-shrink: 0;
+  }
+  .condition-notes { display: none; margin-top: 12px; }
+  .condition-item.checked .condition-notes { display: block; }
+  .condition-notes textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--accent-border);
+    border-radius: 6px; font-size: 15px;
+    font-family: 'Georgia', serif;
+    background: #fff; resize: vertical; min-height: 70px;
+  }
+  .condition-notes textarea:focus { outline: none; border-color: var(--accent); }
+
+  /* ── SIGNATURE ── */
+  .sig-wrap {
+    position: relative;
+    border: 2px dashed var(--rule);
+    border-radius: 8px;
+    background: var(--bg);
+    overflow: hidden;
+    touch-action: none;
+    transition: border-color 0.2s;
+    cursor: crosshair;
+  }
+  .sig-wrap.active { border-color: var(--accent); border-style: solid; }
+  .sig-canvas { display: block; width: 100%; height: 150px; }
+  .sig-placeholder {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    font-size: 13px;
+    color: var(--ink-light);
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+  }
+  .sig-placeholder svg { display: block; margin: 0 auto 6px; opacity: 0.4; }
+  .btn-clear-sig {
+    margin-top: 8px; padding: 8px 16px;
+    background: none; border: 1px solid var(--rule);
+    border-radius: 6px; font-size: 12px;
+    color: var(--ink-light); cursor: pointer;
+    font-family: 'Courier New', monospace; letter-spacing: 1px;
+  }
+  .btn-clear-sig:hover { background: var(--bg); }
+
+  /* ── ACK ── */
+  .ack-text {
+    font-size: 14px; line-height: 1.7; color: var(--ink-light);
+    border-left: 3px solid var(--rule);
+    padding-left: 16px; margin-bottom: 20px; font-style: italic;
+  }
+
+  /* ── IT CARD ── */
+  .it-card { border-left-color: #7c3aed; border-left-width: 4px; }
+  .it-card .dot { background: #7c3aed; }
+
+  /* ── BUTTONS ── */
+  .actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+  .btn {
+    padding: 15px 28px; border-radius: 8px;
+    font-size: 15px; font-family: 'Georgia', serif;
+    cursor: pointer; border: none;
+    transition: opacity 0.15s, transform 0.1s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--accent); color: #fff; flex: 1; justify-content: center; min-width: 160px; }
+  .btn-secondary { background: var(--surface); color: var(--ink); border: 1px solid var(--rule); }
+  .btn-print { background: var(--ink); color: #fff; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── STATUS ── */
+  .status-banner {
+    display: none; padding: 16px 20px; border-radius: 8px;
+    margin-bottom: 20px; font-size: 14px;
+    align-items: center; gap: 12px;
+  }
+  .status-banner.show { display: flex; }
+  .status-banner.success { background: #f0fdf4; border: 1px solid #86efac; color: var(--success); }
+  .status-banner.error { background: #fef2f2; border: 1px solid #fca5a5; color: var(--danger); }
+  .status-banner.loading { background: #eff6ff; border: 1px solid #93c5fd; color: var(--accent); }
+  .status-banner a { color: inherit; font-weight: bold; }
+
+  /* ── PRINT ── */
+  @media print {
+    .setup-box, .actions, .btn-clear-sig, .no-print { display: none !important; }
+    body { background: #fff; }
+    .card { border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
+    .page-header { background: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="seal">💻</div>
+  <div>
+    <h1>Student Computer Return Agreement</h1>
+    <p>Information Technology Department &mdash; Device Return Processing</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="status-banner" id="statusBanner"></div>
+
+  <!-- ── SETUP BOX (hidden, PIN-protected) ── -->
+  <div class="setup-box no-print" id="setupBox" style="display:none;">
+    <div class="setup-inner">
+      <label>Apps Script Web App URL</label>
+      <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/…/exec">
+      <button class="btn-save-config" onclick="saveConfig()">Save Configuration</button>
+      <small>Saved to this device's local storage — persists between sessions.</small>
+      <div class="hint-box">
+        <strong>⚡ First-time setup — takes about 2 minutes:</strong>
+        <ol>
+          <li>Open <a href="https://script.google.com" target="_blank">script.google.com</a> and click <em>New project</em></li>
+          <li>Delete any existing code, paste in the Apps Script code provided separately, then click Save</li>
+          <li>Click <strong>Deploy → New deployment → Web app</strong></li>
+          <li>Set <em>Execute as</em>: <strong>Me</strong> &nbsp;|&nbsp; <em>Who has access</em>: <strong>Anyone</strong></li>
+          <li>Click Deploy, authorize, then copy the Web App URL and paste it above</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN modal -->
+  <div class="pin-overlay no-print" id="pinOverlay">
+    <div class="pin-modal">
+      <h3>⚙ IT Setup</h3>
+      <p>Enter the IT admin PIN to access configuration</p>
+      <input type="password" id="pinInput" maxlength="6" placeholder="••••" onkeydown="if(event.key==='Enter')checkPin()">
+      <div class="pin-btns">
+        <button class="btn-cancel" onclick="closePinModal()">Cancel</button>
+        <button class="btn-confirm" onclick="checkPin()">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STUDENT INFO ── -->
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Student Information</div>
+    <div class="form-grid cols-2">
+      <div class="field" style="grid-column: 1 / -1;">
+        <label>Student Name</label>
+        <input type="text" id="studentName" placeholder="Full legal name" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>Date of Return</label>
+        <input type="date" id="returnDate">
+      </div>
+      <div class="field">
+        <label>Device Type</label>
+        <input type="text" id="device" placeholder="e.g. Chromebook, iPad, Laptop">
+      </div>
+      <div class="field">
+        <label>Device #</label>
+        <input type="text" id="deviceNum" placeholder="Asset or serial number">
+      </div>
+      <div class="field">
+        <label>Charger #</label>
+        <input type="text" id="chargerNum" placeholder="Charger ID / N/A">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RETURN CONDITION ── -->
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Return Condition <span style="font-size:9px;color:var(--ink-light);margin-left:4px;">(check all that apply)</span></div>
+    <div class="condition-list" id="conditionList">
+      <div class="condition-item" id="ci-none">
+        <label><input type="checkbox" id="cond-none" onchange="toggleCondition('ci-none','notes-none',this)">No damage — device returned in expected condition</label>
+        <div class="condition-notes" id="notes-none"><textarea placeholder="Additional notes (optional)…"></textarea></div>
+      </div>
+      <div class="condition-item" id="ci-cosmetic">
+        <label><input type="checkbox" id="cond-cosmetic" onchange="toggleCondition('ci-cosmetic','notes-cosmetic',this)">Minor cosmetic damage — scratches, scuffs, worn stickers</label>
+        <div class="condition-notes" id="notes-cosmetic"><textarea placeholder="Describe the cosmetic damage…"></textarea></div>
+      </div>
+      <div class="condition-item" id="ci-functional">
+        <label><input type="checkbox" id="cond-functional" onchange="toggleCondition('ci-functional','notes-functional',this)">Functional issues — keys, ports, screen, battery problems</label>
+        <div class="condition-notes" id="notes-functional"><textarea placeholder="Describe the functional issue(s)…"></textarea></div>
+      </div>
+      <div class="condition-item" id="ci-missing">
+        <label><input type="checkbox" id="cond-missing" onchange="toggleCondition('ci-missing','notes-missing',this)">Missing items — charger, case, stylus, or accessories not returned</label>
+        <div class="condition-notes" id="notes-missing"><textarea placeholder="List missing items…"></textarea></div>
+      </div>
+      <div class="condition-item" id="ci-structural">
+        <label><input type="checkbox" id="cond-structural" onchange="toggleCondition('ci-structural','notes-structural',this)">Structural damage — cracked screen, broken hinge, bent casing</label>
+        <div class="condition-notes" id="notes-structural"><textarea placeholder="Describe the structural damage…"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STUDENT ACKNOWLEDGMENT ── -->
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>Student Acknowledgment &amp; Signature</div>
+    <p class="ack-text">
+      I hereby confirm that I am returning the above-listed device and accessories to the school's Information Technology department. I understand that any damage beyond normal wear and tear may result in a repair fee. I certify that all information provided above is accurate and complete to the best of my knowledge.
+    </p>
+    <div class="field" style="margin-bottom:16px;">
+      <label>Student Signature — draw below using finger, stylus, or mouse</label>
+      <div class="sig-wrap" id="sigWrap">
+        <canvas class="sig-canvas" id="sigCanvas"></canvas>
+        <div class="sig-placeholder" id="sigPlaceholder">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+          </svg>
+          Sign here
+        </div>
+      </div>
+      <button class="btn-clear-sig" onclick="clearSig()">✕ Clear Signature</button>
+    </div>
+    <div class="field" style="max-width:220px;">
+      <label>Signature Date</label>
+      <input type="date" id="sigDate">
+    </div>
+  </div>
+
+  <!-- ── IT STAFF ── -->
+  <div class="card it-card">
+    <div class="card-title"><span class="dot" style="background:#7c3aed;"></span>IT Staff — For Office Use Only</div>
+    <div class="form-grid cols-2">
+      <div class="field">
+        <label>Received By (IT Staff Name)</label>
+        <input type="text" id="itReceivedBy" placeholder="Staff name">
+      </div>
+      <div class="field">
+        <label>IT Condition Assessment</label>
+        <select id="itCondition">
+          <option value="">Select…</option>
+          <option>Acceptable — no action needed</option>
+          <option>Minor damage noted — documented</option>
+          <option>Repair required — ticket opened</option>
+          <option>Significant damage — fee assessed</option>
+          <option>Device missing — reported</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>IT Processing Date</label>
+        <input type="date" id="itDate">
+      </div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label>IT Notes</label>
+        <textarea id="itNotes" placeholder="Internal notes, ticket numbers, fee amounts, etc."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ACTIONS ── -->
+  <div class="actions no-print">
+    <button class="btn btn-secondary" onclick="resetForm()">↺ Reset Form</button>
+    <button class="btn btn-print" onclick="window.print()">⎙ Print</button>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveRecord()">
+      <span id="saveBtnText">Save to Google Sheets</span>
+    </button>
+  </div>
+
+  <button class="it-unlock-btn no-print" onclick="openPinModal()">IT Admin</button>
+
+</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────────────────────
+let scriptUrl = 'https://script.google.com/macros/s/AKfycbyUPKS6K0Juckk7oZk02pVZBSq8kZ0aJmD_RnoK2W1J3sqjVav0TJScQmQUJWZRZFUkkA/exec';
+const IT_PIN = '1234'; // ← change this to your preferred PIN
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('scriptUrl').value = scriptUrl;
+  setDates();
+  initCanvas();
+});
+
+// ── PIN MODAL ──────────────────────────────────────────────────────────────
+function openPinModal() {
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinInput').classList.remove('error');
+  document.getElementById('pinOverlay').classList.add('show');
+  setTimeout(() => document.getElementById('pinInput').focus(), 100);
+}
+
+function closePinModal() {
+  document.getElementById('pinOverlay').classList.remove('show');
+}
+
+function checkPin() {
+  const entered = document.getElementById('pinInput').value;
+  if (entered === IT_PIN) {
+    closePinModal();
+    document.getElementById('setupBox').style.display = 'block';
+    document.getElementById('setupBox').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    document.getElementById('pinInput').classList.add('error');
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').placeholder = 'Wrong PIN';
+    setTimeout(() => {
+      document.getElementById('pinInput').classList.remove('error');
+      document.getElementById('pinInput').placeholder = '••••';
+    }, 1500);
+  }
+}
+
+// Close modal on overlay click
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pinOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closePinModal();
+  });
+});
+
+function saveConfig() {
+  scriptUrl = document.getElementById('scriptUrl').value.trim();
+  localStorage.setItem('computerReturnScriptUrl', scriptUrl);
+  showStatus('✓ Configuration saved.', 'success');
+  setTimeout(hideStatus, 2500);
+}
+
+// ── DATES ──────────────────────────────────────────────────────────────────
+function today() { return new Date().toISOString().split('T')[0]; }
+function setDates() {
+  const t = today();
+  document.getElementById('returnDate').value = t;
+  document.getElementById('sigDate').value = t;
+  document.getElementById('itDate').value = t;
+}
+
+// ── CONDITIONS ─────────────────────────────────────────────────────────────
+function toggleCondition(itemId, notesId, cb) {
+  document.getElementById(itemId).classList.toggle('checked', cb.checked);
+}
+
+// ── SIGNATURE CANVAS ───────────────────────────────────────────────────────
+let sigDrawing = false, sigHasContent = false;
+let sigCtx, sigCanvas, sigWrap, sigPlaceholder;
+
+function initCanvas() {
+  sigCanvas = document.getElementById('sigCanvas');
+  sigWrap   = document.getElementById('sigWrap');
+  sigPlaceholder = document.getElementById('sigPlaceholder');
+  sigCtx = sigCanvas.getContext('2d');
+  resizeCanvas();
+  sigCanvas.addEventListener('pointerdown', startDraw);
+  sigCanvas.addEventListener('pointermove', draw);
+  sigCanvas.addEventListener('pointerup', endDraw);
+  sigCanvas.addEventListener('pointerleave', endDraw);
+  window.addEventListener('resize', resizeCanvas);
+}
+
+function resizeCanvas() {
+  const rect = sigCanvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  sigCanvas.width  = rect.width * dpr;
+  sigCanvas.height = 150 * dpr;
+  sigCtx.scale(dpr, dpr);
+  sigCtx.strokeStyle = '#1a1a2e';
+  sigCtx.lineWidth = 2.5;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+}
+
+function getPos(e) {
+  const rect = sigCanvas.getBoundingClientRect();
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+function startDraw(e) {
+  e.preventDefault();
+  sigDrawing = true;
+  const pos = getPos(e);
+  sigCtx.beginPath();
+  sigCtx.moveTo(pos.x, pos.y);
+  if (!sigHasContent) {
+    sigHasContent = true;
+    sigPlaceholder.style.display = 'none';
+    sigWrap.classList.add('active');
+  }
+  sigCanvas.setPointerCapture(e.pointerId);
+}
+
+function draw(e) {
+  if (!sigDrawing) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  sigCtx.lineTo(pos.x, pos.y);
+  sigCtx.stroke();
+  sigCtx.beginPath();
+  sigCtx.moveTo(pos.x, pos.y);
+}
+
+function endDraw() { sigDrawing = false; sigCtx.beginPath(); }
+
+function clearSig() {
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  sigHasContent = false;
+  sigPlaceholder.style.display = '';
+  sigWrap.classList.remove('active');
+}
+
+// ── STATUS ─────────────────────────────────────────────────────────────────
+function showStatus(html, type) {
+  const el = document.getElementById('statusBanner');
+  el.innerHTML = html;
+  el.className = 'status-banner show ' + type;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideStatus() {
+  document.getElementById('statusBanner').className = 'status-banner';
+}
+
+// ── COLLECT DATA ───────────────────────────────────────────────────────────
+function collectConditions() {
+  const map = {
+    none: 'No damage', cosmetic: 'Minor cosmetic damage',
+    functional: 'Functional issues', missing: 'Missing items',
+    structural: 'Structural damage'
+  };
+  return Object.entries(map).filter(([id]) => {
+    const cb = document.getElementById('cond-' + id);
+    return cb && cb.checked;
+  }).map(([id, label]) => {
+    const ta = document.querySelector(`#notes-${id} textarea`);
+    const note = ta ? ta.value.trim() : '';
+    return label + (note ? ': ' + note : '');
+  }).join(' | ') || 'No conditions selected';
+}
+
+function collectRow() {
+  return [
+    new Date().toISOString(),
+    document.getElementById('studentName').value.trim(),
+    document.getElementById('returnDate').value,
+    document.getElementById('device').value.trim(),
+    document.getElementById('deviceNum').value.trim(),
+    document.getElementById('chargerNum').value.trim(),
+    collectConditions(),
+    document.getElementById('sigDate').value,
+    document.getElementById('itReceivedBy').value.trim(),
+    document.getElementById('itCondition').value,
+    document.getElementById('itDate').value,
+    document.getElementById('itNotes').value.trim(),
+    sigHasContent ? 'Yes' : 'No'
+  ];
+}
+
+// ── SAVE ───────────────────────────────────────────────────────────────────
+async function saveRecord() {
+  const url = scriptUrl || localStorage.getItem('computerReturnScriptUrl') || '';
+
+  if (!document.getElementById('studentName').value.trim()) {
+    showStatus('⚠ Please enter the student\'s name before saving.', 'error');
+    return;
+  }
+  if (!url) {
+    showStatus('⚠ No Apps Script URL configured. Open the ⚙ setup box above and paste your Web App URL.', 'error');
+    document.getElementById('setupBox').setAttribute('open', '');
+    return;
+  }
+
+  const btn = document.getElementById('saveBtn');
+  const btnText = document.getElementById('saveBtnText');
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span> Saving…';
+  showStatus('Sending to Google Sheets…', 'loading');
+
+  try {
+    const row = collectRow();
+    const signature = sigHasContent ? sigCanvas.toDataURL('image/png') : '';
+    // Use no-cors mode — Apps Script returns opaque response, that's fine
+    const resp = await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ row, signature })
+    });
+
+    // With no-cors we can't read the response body, but if fetch didn't throw, it reached the server
+    showStatus(
+      '✓ Record saved successfully! <a href="https://docs.google.com/spreadsheets/d/1iiWbYpefZ3OqQ3z1YkXY6a-yrcMkmKJ9b_ns7LQEwUE" target="_blank" rel="noopener">Open Spreadsheet →</a>',
+      'success'
+    );
+    setTimeout(() => resetForm(), 3500);
+
+  } catch (err) {
+    console.error(err);
+    showStatus('✕ Error saving: ' + (err.message || 'Network error. Check your Apps Script URL.'), 'error');
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'Save to Google Sheets';
+  }
+}
+
+// ── RESET ──────────────────────────────────────────────────────────────────
+function resetForm() {
+  ['studentName','device','deviceNum','chargerNum','itReceivedBy','itNotes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('itCondition').value = '';
+
+  ['none','cosmetic','functional','missing','structural'].forEach(id => {
+    const cb = document.getElementById('cond-' + id);
+    if (cb) { cb.checked = false; toggleCondition('ci-'+id, 'notes-'+id, {checked:false}); }
+    const ta = document.querySelector(`#notes-${id} textarea`);
+    if (ta) ta.value = '';
+  });
+
+  clearSig();
+  setDates();
+  hideStatus();
+}
+</script>
+</body>
+</html>
